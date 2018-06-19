@@ -1,5 +1,5 @@
 # ansible
-Repository of code Ansible for automation de installation of services web and bd
+Repository of code Ansible for automation the install app
 
 
 git init
