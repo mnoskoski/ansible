@@ -1,0 +1,11 @@
+---
+  - hosts: localhost
+
+    vars:
+      guestname: '{{ansible_hostname}}'
+
+
+    tasks:
+    - name: Using debug
+      debug:
+        msg: "hello world '{{guestname}}' "
