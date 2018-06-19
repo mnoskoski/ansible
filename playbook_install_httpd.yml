@@ -1,0 +1,14 @@
+
+- hosts: localhost
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: Install Apache
+    yum: name=httpd state=installed
+
+  - name: Running the Apache
+    service: name=httpd state=started enabled=yes
+
+  - name: Configure index.html
+    shell: echo "<body><p><br><b>PLAYBOOK INSTALL APACHE E CONFIGURA INDEX</b></p></body>" >> /var/www/html/index.html
