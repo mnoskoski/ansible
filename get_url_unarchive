@@ -1,0 +1,30 @@
+#########################################################
+## get zip for repo external with wget in the ansible  ##
+#########################################################
+---
+  - hosts: localhost
+
+    vars:
+      pass_user: 12345
+
+    tasks:
+      - name: get file zip
+        get_url:
+          # as repo internal i am using an Apache with autentication
+          url: https://localhost/repo/my_file.zip
+          url_username: user_my_service
+          url_password: '{{ pass_user }}'
+          force_basic_auth: yes
+          dest: /tmp/my_file.zip
+          validate_certs: no
+
+      - name: create directory for unzip file
+        file:
+          path: /tmp/my_files_directory
+          state: directory
+
+      - name: unzip file
+        unarchive:
+          command: "unzip /tmp/my_file.zip"
+          dest: /tmp/my_files_directory
+    
