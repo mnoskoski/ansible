@@ -1,0 +1,13 @@
+---
+- name: using module become and using insert line in file
+  hosts: example.com
+  remote_user: connection
+  become: yes
+
+  tasks:
+
+   - name: inserting file
+     lineinfile:
+       path: /etc/hosts
+       line: '10.0.0.50 example.com example'
+       state: present
