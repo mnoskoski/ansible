@@ -1,0 +1,30 @@
+---
+# in the example we have two tasks in a unique playbook for installation the web application and database
+- name: playbook with two tasks - first task
+  hosts: webservers
+  tasks:
+
+    - name: install apache in the webservers
+      yum:
+        name: httpd
+        state: present
+    
+    - name: running service httpd
+      service: 
+        name: httpd
+        state: started
+        enabled: true
+
+  - name: playbook with two taks - second task
+    hosts: database
+    tasks:
+
+      - name: install mariadb
+        yum:
+          name: mariadb
+          state: present
+      
+      - name: running the service
+        service:
+          name: mariadb
+          enabled: true
