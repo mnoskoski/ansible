@@ -1,0 +1,23 @@
+---
+- name: get information from sgs API
+  uri:
+    url: https://GNCASHPL01097.wt.getnet.local/sgs/ws/get_maquina?hostname={{ guestname |upper }}
+    return_content: yes
+    validate_certs: no
+  register: json
+  until: json.status == 200
+  retries: 5
+  delay: 5
+
+- name: get variables server from api.
+  set_fact:
+    ipaddr1: "{{ json.content | from_json |json_query('IP_Maquina') | last }}"
+    ipaddr2: "{{ json.content | from_json |json_query('IP_Branca') | last }}"
+    ipaddr3: "{{ json.content | from_json |json_query('IP_Backup') | last }}"
+    vlan_app: "{{ json.content | from_json |json_query('VLAN') }}"
+    vlan_branca: "{{ json.content | from_json |json_query('VLAN_Branca') }}"
+    vlan_backup: "{{ json.content | from_json |json_query('VLAN_Backup') }}"
+    netmask1: "{{ json.content | from_json |json_query('Network') | ipaddr('netmask') }}"
+    netmask2: "{{ json.content | from_json |json_query('Network_Branca') | ipaddr('netmask') }}"
+    netmask3: "{{ json.content | from_json |json_query('Network_Backup') | ipaddr('netmask') }}"
+    gateway1: "{{ json.content | from_json |json_query('Network') | ipaddr('net') | ipaddr('1') | ipaddr('address') }}"

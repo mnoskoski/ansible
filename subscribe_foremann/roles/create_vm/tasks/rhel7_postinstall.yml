@@ -1,0 +1,94 @@
+- name: sleep to bigfix start
+  wait_for: timeout=120
+    
+- set_fact:
+    new_disk: '/dev/sdb'
+    new_mntp: '/data'
+    create_vgname: 'vg_data'
+    create_lvname: 'lv_data' 
+    create_lvsize: '100%FREE' 
+    filesystem: 'xfs'  
+
+- setup:
+  delegate_to: '{{ guestname }}.wt.getnet.local'
+
+- name: Check SSH
+  shell: "echo hello world"
+  delegate_to: '{{ guestname }}.wt.getnet.local'
+
+- name: Hello
+  debug:
+    msg: 'Server {{ ansible_hostname }}'
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+
+- name: Create partition
+  parted:
+    device: '{{ new_disk }}'
+    number: 1
+    state: present
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Criar VG
+  lvg: 
+    vg: '{{ create_vgname }}'
+    pvs: '{{ new_disk }}1' 
+    state: present
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Check File system exist
+  stat:
+    path: '/dev/{{ create_vgname }}/{{ create_lvname }}'
+  register: disk_status
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Criar LV
+  lvol: 
+    vg: '{{ create_vgname }}'
+    lv: '{{ create_lvname }}'
+    size: '{{ create_lvsize }}'
+  when: disk_status.stat.exists == false
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Criar o FS no LV
+  filesystem: 
+    fstype: '{{ filesystem }}'
+    dev: '/dev/{{ create_vgname }}/{{ create_lvname }}'
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Create {{ new_mntp }}
+  file:
+    path: '{{ new_mntp }}'
+    state: directory
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Create fstab file
+  mount: 
+    name: '{{ new_mntp }}'
+    src: '/dev/{{ create_vgname }}/{{ create_lvname }}'
+    fstype: '{{ filesystem }}'
+    state: present
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo
+
+- name: Montar o FS
+  mount: 
+    name: '{{ new_mntp }}'
+    src: '/dev/{{ create_vgname }}/{{ create_lvname }}'
+    fstype: '{{ filesystem }}'
+    state: mounted
+  delegate_to: '{{ guestname }}.wt.getnet.local'  
+  become: yes
+  become_method: sudo

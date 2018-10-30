@@ -1,0 +1,9 @@
+disk:
+ - size_gb: 50
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True
+ - size_gb: 50
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True

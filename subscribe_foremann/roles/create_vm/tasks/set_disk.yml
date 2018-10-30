@@ -1,0 +1,51 @@
+- name: set disk rhel
+  include_vars: rhel.yml
+  when: vmtemplate == 'Template_RHEL7_x64_Compliance' and disk_size_data is defined
+
+- name: set disk rhel_clean
+  include_vars: rhel_clean.yml
+  when: vmtemplate == 'Template_RHEL7_x64_Compliance' and disk_size_data is undefined
+
+- name: set disk mongodb
+  include_vars: mongodb.yml
+  when: (vmtemplate == 'Template_RHEL7_x64_Compliance' and application_name == 'Mongo')
+
+- name: set disk wls or ohs
+  include_vars: wls_ohs.yml
+  when: vmtemplate == 'Template_RHEL7_x64_OHS_WLS_Compliance'
+
+- name: set disk db_ora Bronze
+  include_vars: db_ora_bronze.yml
+  when: vmtemplate == 'Template_RHEL7_x64_BD_Bronze_Compliance'
+
+- name: set disk db_ora Bronze
+  include_vars: db_ora_bronze_goldengate.yml
+  when: vmtemplate == 'Template_RHEL7_x64_BD_Bronze_Compliance' and goldengate == 'true'
+
+- name: set disk db_ora Silver
+  include_vars: db_ora_silver.yml
+  when: vmtemplate == 'Template_RHEL7_x64_BD_Silver_Compliance'
+
+- name: set disk db_ora Silver
+  include_vars: db_ora_silver_goldengate.yml
+  when: vmtemplate == 'Template_RHEL7_x64_BD_Silver_Compliance' and goldengate == 'true'
+
+- name: set disk db_ora Gold
+  include_vars: db_ora_gold.yml
+  when: vmtemplate == 'Template_RHEL7_x64_BD_Gold_Compliance'
+
+- name: set disk db_ora Gold
+  include_vars: db_ora_gold_goldengate.yml
+  when: vmtemplate == 'Template_RHEL7_x64_BD_Gold_Compliance' and goldengate == 'true'
+
+- name: set disk paas_node_master
+  include_vars: paas_node_master.yml
+  when: vmtemplate == 'Template_Openshift' and type_node == 'master'
+
+- name: set disk paas_node_infra
+  include_vars: paas_node_infra.yml
+  when: vmtemplate == 'Template_Openshift' and type_node == 'infra'
+
+- name: set disk windows
+  include_vars: windows.yml
+  when: vmtemplate |regex_search('^Template_Windows20.*_x64_Compliance')

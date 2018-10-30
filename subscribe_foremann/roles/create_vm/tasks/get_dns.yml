@@ -1,0 +1,19 @@
+- name: get dns server location for devel
+  set_fact: dns1="{{ guestname|upper |regex_replace('^GNCAS[H|S|N]D.*', 'devel') }}"
+  when: guestname|upper |search("^GNCAS[H|S|N]D.*")
+
+- name: get dns server location for production
+  set_fact: dns1="{{ guestname|upper |regex_replace('^GNCAS[H|S|N]P.*', 'prod') }}"
+  when: guestname|upper |search("^GNCAS[H|S|N]P.*")
+
+- name: get dns server location for stage
+  set_fact: dns1="{{ guestname|upper |regex_replace('^GNCAS[H|S|N]H.*', 'homol') }}"
+  when: guestname|upper |search("^GNCAS[H|S|N]H.*")
+
+- name: get dns server location for transaction
+  set_fact: dns1="{{ guestname|upper |regex_replace('^GNCAS[H|S|N]T.*', 'transacional') }}"
+  when: guestname|upper |search("^GNCAS[H|S|N]T.*")
+
+- name: get dns server location for white
+  set_fact: dns1="{{ guestname|upper |regex_replace('^GNCAS[H|S|N]W.*', 'white') }}"
+  when: guestname|upper |search("^GNCAS[H|S|N]W.*")

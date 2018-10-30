@@ -1,0 +1,55 @@
+#####
+# DC Campinas
+#- name: get cluster must linux SUL
+#  set_fact:
+#    cluster: "{{ guestname|upper |regex_replace('^GNCASS[T|P]L.*', 'CL_LINUX_MUST_SUL') }}"
+#  when: datacenter == 'CAS' and
+#        guestname|upper |regex_search("GNCASS[T|P]L.*")
+#
+#- name: get cluster must linux NORTE
+#  set_fact:
+#    cluster: "{{ guestname|upper |regex_replace('^GNCASN[T|P]L.*', 'CL_LINUX_MUST_NORTE') }}"
+#  when: datacenter == 'CAS' and
+#        guestname|upper |regex_search("GNCASN[T|P]L.*")
+
+- name: get cluster must linux
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCAS[S|N][T|P]L.*', 'CL_LINUX_MUST') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search("GNCAS[S|N][T|P]L.*")
+
+- name: get cluster must windows
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCAS[S|N][T|P]W.*', 'CL_WINDOWS_MUST') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search('^GNCAS[S|N][T|P]W.*')
+
+- name: get cluster should windows
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCASH[T|P]W.*', 'CL_WINDOWS_SHOULD') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search('^GNCASH[T|P]W.*')
+
+- name: get cluster should linux
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCASH[T|P]L.*', 'CL_LINUX_SHOULD') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search('^GNCASH[T|P]L.*')
+
+- name: get cluster nprod win
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCAS[S|N|H][H|D]W.*', 'CL_NTNX01_NPROD_WIN') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search('^GNCAS[S|N|H][D|H]W.*')
+
+- name: get cluster nprod lin
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCAS[S|N|H][H|D]L.*', 'CL_NTNX01_NPROD_LIN') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search('^GNCAS[S|N|H][D|H]L.*')
+
+- name: get cluster localservices
+  set_fact:
+    cluster: "{{ guestname|upper |regex_replace('^GNCAS[N|S|H]W[W|L].*', 'CL_LOCALSERVICES') }}"
+  when: datacenter == 'CAS' and
+        guestname|upper |regex_search('^GNCAS[N|S|H]W[W|L].*')

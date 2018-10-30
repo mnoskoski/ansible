@@ -1,0 +1,4 @@
+disk:
+ - size_gb: 24
+   type: thin
+   datastore: "{{ datastore }}"

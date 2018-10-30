@@ -1,0 +1,29 @@
+- name: get guest id type Windows
+  set_fact:
+    sistema: "windows"
+  when: guestname|upper |regex_search("BT[CB|POA][|P|H|D|]W.*")
+
+- name: get guest id type Linux
+  set_fact:
+    sistema: "Linux"
+  when: guestname|upper |regex_search("BT[CB|POA][|P|H|D|]L.*")
+
+- name: get guest_id
+  set_fact: guest_id_type="{{ guest_id[sistema] }}"
+
+- name: set datastore name
+  set_fact:
+    datastore: "{{ cluster |regex_replace('^CL', 'DS') }}_*"
+  when: datacenter == 'CAS'
+
+  - name: set datastore name
+  set_fact:
+    datastore: "DS_NTNXMETRO_SHOULD_NORTE"
+  when: datacenter == 'CAS' and guestname|upper |regex_search("GNCAS[H|S|N]W[L|W].*")
+
+- name: set datastore name
+  set_fact: datastore="DS_MINICTC2_*"
+  when: ( datacenter == 'CB' and vmtemplate == 'Template_Openshift' )
+
+- name: get vcenter information
+  set_fact: vcenter_conn={{ vcenter[datacenter] }}

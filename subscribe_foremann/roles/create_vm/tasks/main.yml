@@ -1,0 +1,158 @@
+- name: Consulta API para buscar variaveis
+  include: get_variable_api.yml
+
+- name: vcenter config
+  include: vcenter_config.yml
+
+- name: get cluster
+  include: get_cluster.yml
+
+- name: set disk
+  include: set_disk.yml
+
+- name: get dns
+  include: get_dns.yml
+
+- name: include template name
+  include: get_template.yml
+
+- name: get network white
+  set_fact:
+    net_white: "{{ipaddr2}}/{{netmask2}}"
+
+- name: get gateway for white network
+  set_fact:
+    route_win: "route add 22.0.0.0 MASK 255.0.0.0 {{ net_white | ipaddr('1') | ipaddr('address') }} -P"
+
+- name: Create VM Linux from template
+  vmware_guest:
+    hostname: "{{ vcenter_conn['vcenter_hostname'] }}"
+    username: "{{ vcenter_conn['vcenter_user'] }}"
+    password: "{{ vcenter_conn['vcenter_pass'] }}"
+    validate_certs: no
+    cluster: "{{ cluster }}"
+    datacenter: "{{ vcenter_conn['esxdc'] }}"
+    folder: "{{ machine_folder }}"
+    name: "{{ guestname |upper }}"
+    state: poweredon
+    guest_id: "{{ guest_id_type }}"
+    disk: "{{ disk }}"
+    hardware:
+      memory_mb: "{{ memory_mb }}"
+      num_cpus: "{{ vcpu }}"
+      scsi: paravirtual
+    networks:
+    - name: "{{ vlan_app }}"
+      type: static
+      device_type: vmxnet3
+      ip: "{{ ipaddr1 }}"
+      netmask: "{{ netmask1 }}"
+      gateway: "{{ gateway1 }}"
+    - name: "{{ vlan_branca }}"
+      type: static
+      device_type: vmxnet3
+      ip: "{{ ipaddr2 }}"
+      netmask: "{{ netmask2 }}"
+    - name: "{{ vlan_backup }}"
+      type: static
+      device_type: vmxnet3
+      ip: "{{ ipaddr3 }}"
+      netmask: "{{ netmask3 }}"
+    template: "{{ template }}"
+    customization:
+      hostname: "{{ guestname |upper }}"
+      domain: getnet.local
+      dns_servers: "{{ dns_nameserver[dns1] }}"
+  register: vm_output
+  when: sistema == 'linux'    
+
+- name: Wait 1 hour for port 22 to become open on the host when machine white
+  wait_for:
+    host: "{{ ipaddr1 }}"
+    port: 22
+    sleep: 10
+    timeout: 3600
+  when: sistema == 'linux' and guestname|upper |regex_search("GNCAS[H|S|N]WL.*")
+
+- name: Wait 1 hour for port 22 to become open on the host
+  wait_for:
+    host: "{{ ipaddr2 }}"
+    port: 22
+    sleep: 10
+    timeout: 3600
+  when: sistema == 'linux' and guestname|upper |regex_search("GNCAS[S|N|H][T|P|H|D]L.*")
+
+- name: Create VM Windows from template
+  vmware_guest:
+    hostname: "{{ vcenter_conn['vcenter_hostname'] }}"
+    username: "{{ vcenter_conn['vcenter_user'] }}"
+    password: "{{ vcenter_conn['vcenter_pass'] }}"
+    validate_certs: no
+    cluster: "{{ cluster }}"
+    datacenter: "{{ vcenter_conn['esxdc'] }}"
+    folder: "{{ machine_folder }}"
+    name: "{{ guestname |upper }}"
+    state: poweredon
+    guest_id: "{{ guest_id_type }}"
+    disk: "{{ disk }}"
+    hardware:
+      memory_mb: "{{ memory_mb }}"
+      num_cpus: "{{ vcpu }}"
+      scsi: paravirtual
+    networks:
+    - name: "{{ vlan_app }}"
+      type: static
+      device_type: vmxnet3
+      ip: "{{ ipaddr1 }}"
+      netmask: "{{ netmask1 }}"
+      gateway: "{{ gateway1 }}"
+    - name: "{{ vlan_branca }}"
+      type: static
+      device_type: vmxnet3
+      ip: "{{ ipaddr2 }}"
+      netmask: "{{ netmask2 }}"
+    - name: "{{ vlan_backup }}"
+      type: static
+      device_type: vmxnet3
+      ip: "{{ ipaddr3 }}"
+      netmask: "{{ netmask3 }}"
+    template: "{{ template }}"
+    customization:
+      autologon: yes
+      autologoncount: 1
+      domainadmin: "{{ vcenter_conn['vcenter_user'] }}"
+      domainadminpassword: "{{ vcenter_conn['vcenter_pass'] }}"
+      domain: getnet.local
+      joindomain: getnet.local
+      password: '1nsp1r0n15dell@'
+      name: "{{ guestname }}"
+      dns_servers: "{{ dns_nameserver[dns1] }}"
+      # Timezone list: https://msdn.microsoft.com/en-us/library/ms912391.aspx
+      timezone: 65
+
+  register: vm_output
+  when: sistema == 'windows'
+
+- name: Wait 1 hour for port 5986 to become open on the host when machine white
+  wait_for:
+    host: "{{ ipaddr1 }}"
+    port: 5986
+    sleep: 10
+    timeout: 3600
+  when: sistema == 'windows' and guestname|upper |regex_search("GNCAS[H|S|N]WW.*")
+
+- name: Wait 1 hour for port 5986 to become open on the host
+  wait_for:
+    host: "{{ ipaddr2 }}"
+    port: 5986
+    sleep: 10
+    timeout: 3600
+  when: sistema == 'windows' and guestname|upper |regex_search("GNCAS[S|N|H][T|P|H|D]W.*")
+
+- name: Set timeout to wait bigfix.
+  wait_for:
+    timeout: 1200
+  when: sistema == 'windows'
+
+#- name: debug
+#  include: debug.yml

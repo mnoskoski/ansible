@@ -1,0 +1,29 @@
+- name: debug datastore selected
+  debug:
+    msg: "Datastore Selected {{ datastore }}"
+
+- name: debug datacenter name
+  debug: msg="Nome do Datacenter para instalacao {{ datacenter }}"
+
+- name: debug cluster name
+  debug: msg="Nome do Cluster para instalacao {{ cluster }}"
+
+- name: debug info about datacenter
+  debug: var=vcenter[datacenter]
+
+- name: debug info about vcenter connection
+  debug: msg="Informacoes de conexao do vcenter {{ vcenter_conn}}"
+
+- name: debug vcenter host, user and password
+  debug: msg="hostname {{vcenter_conn['vcenter_hostname']}}
+         username {{vcenter_conn['vcenter_user']}}
+         password {{vcenter_conn['vcenter_pass']}}
+         datastore {{datastore}}
+         cluster {{ cluster }}"
+         
+- name: debug dns
+  debug: msg="{{ dns_nameserver[dns1] }}"
+
+- name: debug vm create output
+  debug: var=vm_output
+  when: vm_output is defined

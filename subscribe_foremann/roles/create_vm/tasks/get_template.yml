@@ -1,0 +1,20 @@
+---
+- name: set template name
+  set_fact:
+    template: "{{vmtemplate}}"
+
+- name: setting template name when guest is *_MUST
+  set_fact:
+    template: "{{vmtemplate}}_Must"
+  when: datacenter == 'CAS' and
+        cluster|upper |regex_search(".*_MUST")
+
+- name: setting template name when guest is *_Should_WHT
+  set_fact:
+    template: "{{vmtemplate}}_Should_WHT"
+  when: datacenter == 'CAS' and guestname|upper |regex_search("GNCAS[H|S|N]W[L|W].*")
+
+- name: setting template name when guest is *_NPROD
+  set_fact:
+    template: "{{vmtemplate}}_NPROD"
+  when: datacenter == 'CAS' and guestname|upper |regex_search("GNCAS[H|S|N][H|D][L|W].*")

@@ -1,0 +1,25 @@
+disk:
+ - size_gb: 37
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True
+ - size_gb: 160
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True
+ - size_gb: 145
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True
+ - size_gb: 145
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True
+ - size_gb: 37
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True
+ - size_gb: 100
+   type: thin
+   datastore: "{{ datastore }}"
+   autoselect_datastore: True

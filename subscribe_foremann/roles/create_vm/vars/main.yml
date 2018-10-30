@@ -1,0 +1,62 @@
+# Variaveis para criacao da VM
+datastore: "Container_GET01"
+networktype: dvs
+notes: "VM Created by Ansible Tower"
+dumpfacts: False
+sistema: linux
+network1: 1
+network2: 1
+network3: 1
+machine_folder: /
+
+guest_id:
+  linux: rhel7_64Guest
+  windows: windows8Server64Guest
+
+cluster: DC-CBM-PROD
+datacenter: CB
+vmtemplate: "Template_RHEL7_x64_Compliance"
+vcenter:
+  CAS:
+    vcenter_hostname: vcenter-ctc-prod.getnet.local
+    vcenter_user: "{{ lookup('env', 'VMWARE_USER') }}"
+    vcenter_pass: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+    esxdc: DC-CTC-PROD
+    cluster:
+      - CL_LINUX_MUST_NORTE
+      - CL_LINUX_MUST_SUL
+      - CL_LINUX_SHOULD
+      - CL_WINDOWS_MUST
+      - CL_WINDOWS_SHOULD
+      - CL_LOCALSERVICES
+      - CL_NTNX01_NPROD_LIN
+      - CL_NTNX01_NPROD_WIN
+  CB:
+    vcenter_hostname: gn568cb.getnet.local
+    vcenter_user: "{{ lookup('env', 'VMWARE_USER') }}"
+    vcenter_pass: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
+    esxdc: DC-CBM-PROD
+    cluster:
+      - CL_DELL_M630
+
+dns_nameserver:
+    transacional:
+      - 180.104.1.12
+      - 180.104.7.15
+      - 180.104.7.16
+    prod:
+      - 180.104.129.12
+      - 180.104.135.15
+      - 180.104.135.16
+    homol:
+      - 180.135.1.12
+      - 180.135.7.15
+      - 180.135.7.16
+    devel:
+      - 180.135.129.12
+      - 180.135.135.15
+      - 180.135.135.16
+    white:
+      - 22.248.1.12
+      - 22.248.7.15
+      - 22.248.7.16
