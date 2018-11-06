@@ -1,5 +1,5 @@
 - name: remove the ca consumer of server
-  command: yum erase 'katello-ca-consumer-*' -y 
+  command: yum erase 'katello-ca-consumer-*' -y
   ignore_errors: yes
 
 - name: copy /etc/rhsm.conf
@@ -8,11 +8,12 @@
     dest: /etc/rhsm/rhsm.conf.bkp
 
 - name: unregister and clean repos
-  command: subscription-manager clean 
+  command: subscription-manager clean
 
-- name: download katello ca consumer
-  get_url: 
-    url: http://{{ foreman_server }}/pub/katello-ca-consumer-latest.noarch.rpm
+- name: download katello ca consumer PROD
+  get_url:
+    url: '{{ foreman_server }}/pub/katello-ca-consumer-latest.noarch.rpm'
+    validate_certs: no
     dest: /tmp/katello-ca-consumer-latest.noarch.rpm
 
 - name: install katello agent
@@ -20,15 +21,17 @@
 
 - name: register and subscribe
   redhat_subscription:
-#    activationkey: '{{ activation_key }}'
+    activationkey: '{{ activation_key }}'
     org_id: '{{ org_id }}'
+    username: '{{ username_foreman }}'
+    password: '{{ password_foreman }}'
     force_register: yes
     server_insecure: yes
     state: present
   register: task_result
-  until: task_result.stdout.find("System successfully registered to") != -1
-  #retries: 5
-  #delay: 60
+  
+- name: subscription machine in the foreman
+  command: subscription-manager register --org="Topazio" --activationkey="ak_centos7" --force
 
 - name: update katello-agentt
   yum:
