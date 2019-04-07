@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  tasks:
+    - name: update packages
+      yum:
+        name: '*'
+        state: latest
+
+    - name: inserting repo in file mongodb
+      template:
+        src: mongodb_repo.j2
+        dest: /etc/yum.repos.d/mongodb-org-4.0.repo
+ 
+    - name: install mongodb
+      yum:
+        name: ' {{ item }}'
+        state: installed
+      with_items:
+        - mongodb-org
+        - mongodb-org-4.0.8 
+        - mongodb-org-server-4.0.8 
+        - mongodb-org-shell-4.0.8 
+        - mongodb-org-mongos-4.0.8 
+        - mongodb-org-tools-4.0.8
+
+    - name: enable in service mongo
+      service:
+        name: mongod
+        state: started
+        enabled: yes
