@@ -1,0 +1,5 @@
+[desenvolvimento]
+10.0.0.50 ansible_ssh_user=marcelo ansible_ssh_pass=password
+
+[server_local]
+localhost

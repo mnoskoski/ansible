@@ -18,3 +18,14 @@ O ansible usa um arquivo que chamamos de inventário que tem todos os hosts que 
 ## O que são os playbooks?
 O playbook é o arquivo que recebe as instruções para execução das tarefas de automação.
 
+
+## Arquivo de Configuração do Ansible
+Todas as configurações e parametros referente ao Ansible ficam armazenadas dentro do arquivo: /etc/ansible/ansible.cfg 
+## Arquivo de Inventário do Ansible 
+Posso ter um local para uso durante a minha execução, ou posso setar os arquivos dentro do /etc/ansible/hosts
+### Comando para Listar todos os hosts configurados no inventário:
+ansible all --list-hosts
+
+
+
+
