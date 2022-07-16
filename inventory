@@ -1,5 +1,9 @@
 [desenvolvimento]
-10.0.0.50 ansible_ssh_user=marcelo ansible_ssh_pass=password
+10.0.0.10 ansible_ssh_user=admin ansible_ssh_pass=password
 
-[server_local]
-localhost
+[web]
+192.168.0.10
+
+[bd]
+10.10.0.[10:250]
+

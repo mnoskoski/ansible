@@ -1,0 +1,26 @@
+---
+- name: "Playbook  Hello World"
+  hosts: localhost
+  vars:
+    name_file: "arquivo.txt"
+    nome_user: "Marcelo "
+  tasks:
+    - name: executing echo Hello World
+      shell: echo "Hello World $(date) - {{ name_file }}"
+    - name: Show using debug - Ansible
+      ansible.builtin.debug:
+        msg: My var file s called {{ name_file }}
+
+    - name: copy file user {{ nome_user }}
+      template:
+        src: file-text.j2
+        dest: /mnt/c/Users/marcelonb/Documents/projetos/mnoskoski/ansible/example/file-text.txt
+#
+#
+#
+#---
+#- name: "Playbook 2"
+#  hosts: localhost
+#  tasks:
+#    - name: executing echo Hello World
+#      shell: echo "Hello World $(date)" >> /mnt/c/Users/marcelonb/Documents/projetos/mnoskoski/ansible/text.txt

@@ -1,0 +1,24 @@
+---
+- name: "playbook hello world"
+  hosts: localhost
+  vars:
+    user_name: "Joao"
+  tasks:
+    - name: "executando hello world"
+      become: yes
+      shell: echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+    
+    - name: "utilizando template USER {{ user_name }}"
+      template:
+        src: config.j2
+        dest: /mnt/c/Users/marcelonb/Documents/projetos/mnoskoski/ansible/pratica-ansible/file.xml
+
+    - name: "instalando apache"
+      yum:
+        name: httpd
+        state: present
+    
+    - name: "Configurando apache"
+      template:
+        src: apache.j2
+        dest: /etc/httpd/conf/apache.conf
