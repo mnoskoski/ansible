@@ -12,3 +12,5 @@
 
   - name: Configure index.html
     shell: echo "<body><p><br><b>PLAYBOOK INSTALL APACHE E CONFIGURA INDEX</b></p></body>" >> /var/www/html/index.html
+
+

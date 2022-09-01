@@ -1,11 +1,9 @@
 ---
   - hosts: localhost
-
-
     tasks:
     - name: "create directory"
       file:
-       path: /home/{{item}}
+       path: /home/user1
        state: touch
       with_items:
        - arq1.txt

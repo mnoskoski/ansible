@@ -1,13 +1,14 @@
 ---
-# in the example we can see two action equals, but the first task is non-idempotent and the second task is idempotent
 - name: example to using idempotent in playbook
   hosts: all
   tasks:
-    - name: using non-idempotent sintaxe
+    - name: BLOCO 1
       shell: echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
-    - name: using idempotent sintaxe
+    - name: BLOCO 2
       copy:
         content: "nameserver 8.8.8.8"
         dest: /etc/resolv.conf
 ...
+
+

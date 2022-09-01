@@ -18,3 +18,10 @@ O ansible usa um arquivo que chamamos de inventário que tem todos os hosts que 
 ## O que são os playbooks?
 O playbook é o arquivo que recebe as instruções para execução das tarefas de automação.
 
+## Alguns comandos Básicos de Ansible
+ansible-playbook -i web main.yaml
+ansible -m ping localhost
+ansible localhost  -a echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+ansible localhost -m ansible.builtin.setup
+
+
